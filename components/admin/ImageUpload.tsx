@@ -31,9 +31,13 @@ export function ImageUpload({
     const fd = new FormData();
     fd.append("file", file);
     startTransition(async () => {
-      const res = await uploadImage(fd);
-      if (res.ok && res.url) setUrl(res.url);
-      else setError(res.message || "Upload failed.");
+      try {
+        const res = await uploadImage(fd);
+        if (res.ok && res.url) setUrl(res.url);
+        else setError(res.message || "Upload failed.");
+      } catch {
+        setError("Upload failed — try a smaller image, then retry.");
+      }
     });
     e.target.value = "";
   }

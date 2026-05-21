@@ -18,6 +18,14 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Keep the native Postgres driver out of the bundle.
   serverExternalPackages: ["pg", "@prisma/adapter-pg"],
+  // Allow real photos through Server Actions (the default cap is only 1 MB).
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "15mb",
+    },
+  },
+  // Permit accessing the dev server from the local network IP.
+  allowedDevOrigins: ["192.168.56.1"],
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

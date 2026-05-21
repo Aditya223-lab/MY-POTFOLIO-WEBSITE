@@ -100,8 +100,11 @@ export async function uploadImage(
   if (!file.type.startsWith("image/")) {
     return { ok: false, message: "Please choose an image file." };
   }
-  if (file.size > 5 * 1024 * 1024) {
-    return { ok: false, message: "Image must be under 5 MB." };
+  if (file.size > 10 * 1024 * 1024) {
+    return {
+      ok: false,
+      message: "Image is too large — please use one under 10 MB.",
+    };
   }
 
   const ext =
@@ -110,19 +113,24 @@ export async function uploadImage(
       .replace(/[^a-z0-9]/g, "") || "png";
   const name = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
-  // Production / Vercel: store in Blob cloud storage.
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    const { put } = await import("@vercel/blob");
-    const blob = await put(`uploads/${name}`, file, { access: "public" });
-    return { ok: true, url: blob.url };
-  }
+  try {
+    // Production / Vercel: store in Blob cloud storage.
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      const { put } = await import("@vercel/blob");
+      const blob = await put(`uploads/${name}`, file, { access: "public" });
+      return { ok: true, url: blob.url };
+    }
 
-  // Local development: store on disk under /public/uploads.
-  const bytes = Buffer.from(await file.arrayBuffer());
-  const dir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(dir, { recursive: true });
-  await writeFile(path.join(dir, name), bytes);
-  return { ok: true, url: `/uploads/${name}` };
+    // Local development: store on disk under /public/uploads.
+    const bytes = Buffer.from(await file.arrayBuffer());
+    const dir = path.join(process.cwd(), "public", "uploads");
+    await mkdir(dir, { recursive: true });
+    await writeFile(path.join(dir, name), bytes);
+    return { ok: true, url: `/uploads/${name}` };
+  } catch (err) {
+    console.error("uploadImage failed:", err);
+    return { ok: false, message: "Upload failed — please try again." };
+  }
 }
 
 /* ---------- profile ---------- */
