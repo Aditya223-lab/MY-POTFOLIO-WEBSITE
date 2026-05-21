@@ -12,6 +12,7 @@ import {
 import type { Blog } from "@/app/generated/prisma/client";
 import { SubmitButton, Feedback, Field } from "./ui";
 import { ImageUpload } from "./ImageUpload";
+import { BlogContentEditor } from "./BlogContentEditor";
 import { DeleteButton } from "./DeleteButton";
 
 const initialState: FormState = { ok: false, message: "" };
@@ -83,17 +84,12 @@ export function BlogForm({ blog }: { blog?: Blog }) {
       </div>
 
       <div className="card p-5">
-        <Field
-          label="Content"
-          hint="Supports Markdown — # headings, **bold**, `code`, lists, links and code blocks."
-        >
-          <textarea
-            name="content"
-            className="field min-h-[420px] resize-y font-mono text-sm leading-relaxed"
-            defaultValue={blog?.content ?? ""}
-            placeholder={"## Introduction\n\nStart writing here…"}
-          />
-        </Field>
+        <span className="field-label">Content</span>
+        <BlogContentEditor defaultValue={blog?.content ?? ""} />
+        <p className="mt-2 text-xs text-muted">
+          Supports Markdown — headings, bold, lists, links, and code blocks.
+          Use “Insert image” to add screenshots between your paragraphs.
+        </p>
       </div>
 
       <label className="card flex cursor-pointer items-center justify-between gap-4 p-5">
