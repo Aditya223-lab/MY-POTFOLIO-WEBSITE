@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ChevronRight, ArrowDown } from "lucide-react";
 import type { Profile, SocialLink } from "@/app/generated/prisma/client";
 import { getIcon } from "@/lib/icons";
-import HeroCanvas from "@/components/three/HeroCanvas";
+import { CyberScanner } from "@/components/site/CyberScanner";
 
 export function Hero({
   profile,
@@ -73,9 +73,9 @@ export function Hero({
           ) : null}
         </div>
 
-        {/* ---- 3D object ---- */}
+        {/* ---- cyber threat scanner ---- */}
         <div className="flex justify-center md:justify-end">
-          <HeroCanvas />
+          <CyberScanner />
         </div>
       </div>
 
