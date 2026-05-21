@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes create-next-app@latest . --ts --tailwind --app --eslint --no-src-dir --import-alias \"@/*\" --use-npm --turbopack)",
+      "Read(//c/Users/thapa/Documents/**)",
+      "Bash(npx --yes create-next-app@latest portfolio-build --ts --tailwind --app --eslint --no-src-dir --import-alias \"@/*\" --use-npm --turbopack)",
+      "Bash(npm install *)",
+      "Bash(node -e \"const l=require\\('lucide-react'\\); const want=['Github','Linkedin','Twitter','Instagram','Mail','Globe','Terminal','Trophy','Award','Target','Flag','Code','Code2','Shield','ShieldCheck','Box','Hexagon','Crosshair','Cpu','Zap','Link','Link2','ExternalLink','BookOpen','Briefcase','GraduationCap','Medal','Bug','Youtube','Send','MessageCircle','Rss','FileText','Lock','Network','Radar','Star','Sparkles','ChevronRight','Menu','X','Plus','Pencil','Trash2','Eye','EyeOff','LogOut','LayoutDashboard','User','Upload','Save','Image']; const missing=want.filter\\(w=>!l[w]\\); console.log\\('MISSING:', missing.length?missing.join\\(', '\\):'none'\\);\")",
+      "Bash(npm run *)",
+      "Bash(timeout 25 npx wait-on http://localhost:3000)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' -L --max-time 30 http://localhost:3000__TRACKED_VAR__)",
+      "Bash(curl -s -o /dev/null -w \"status=%{http_code} location=%{redirect_url}\\\\n\" --max-time 20 \"http://localhost:3000/admin\")",
+      "Bash(curl -s --max-time 30 \"http://localhost:3000/\")",
+      "Read(//tmp/**)",
+      "Bash(curl -s --max-time 30 \"http://localhost:3000/blog/breaking-into-bug-bounty\")",
+      "Bash(node -e \"const {SignJWT}=require\\('jose'\\);const s=new TextEncoder\\(\\).encode\\('272e6a579fc24dc0b1aeec12ce3d3eba020cfe49eeae591f8245789a846ef63b'\\);new SignJWT\\({role:'admin'}\\).setProtectedHeader\\({alg:'HS256'}\\).setIssuedAt\\(\\).setExpirationTime\\('7d'\\).sign\\(s\\).then\\(t=>console.log\\(t\\)\\)\")",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' --max-time 30 -b portfolio_session=__TRACKED_VAR__ http://localhost:3000__TRACKED_VAR__)",
+      "Bash(node -e \"const path=require\\('path'\\);const {PrismaClient}=require\\('./app/generated/prisma/client'\\);const {PrismaBetterSqlite3}=require\\('@prisma/adapter-better-sqlite3'\\);const a=new PrismaBetterSqlite3\\({url:'file:'+path.join\\(process.cwd\\(\\),'dev.db'\\)}\\);const p=new PrismaClient\\({adapter:a}\\);p.blog.findFirst\\(\\).then\\(b=>{console.log\\(b.id\\);process.exit\\(0\\)}\\)\")",
+      "Bash(curl -s -o /dev/null -w 'edit page status=%{http_code}\\\\n' --max-time 30 -b portfolio_session=__TRACKED_VAR__ http://localhost:3000/admin/blogs/__TRACKED_VAR__)",
+      "Bash(node -e \"const D=require\\('better-sqlite3'\\);const db=new D\\('dev.db'\\);console.log\\(db.prepare\\('SELECT id FROM Blog LIMIT 1'\\).get\\(\\).id\\)\")",
+      "Bash(curl -s -o /dev/null -w 'blog edit page status=%{http_code}\\\\n' --max-time 30 -b portfolio_session=__TRACKED_VAR__ http://localhost:3000/admin/blogs/__TRACKED_VAR__)",
+      "Bash(node -e \"console.log\\('/x-'+require\\('crypto'\\).randomBytes\\(5\\).toString\\('hex'\\)\\)\")",
+      "Bash(npm uninstall *)",
+      "Bash(npm pkg *)",
+      "Bash(npx prisma *)",
+      "PowerShell(Get-NetTCPConnection *)",
+      "PowerShell(Test-Path *)",
+      "Bash(docker compose *)",
+      "Bash(curl -s --max-time 30 \"http://localhost:3000/\" -o /tmp/h.html)",
+      "Bash(curl -s --max-time 30 \"http://localhost:3000/blog\" -o /tmp/b.html)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' --max-time 30 -b portfolio_session=__TRACKED_VAR__ http://localhost:3000/x-2296190cac)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' --max-time 30 -b portfolio_session=__TRACKED_VAR__ http://localhost:3000/x-2296190cac/socials)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}

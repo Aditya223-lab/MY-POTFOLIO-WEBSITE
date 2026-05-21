@@ -1,0 +1,63 @@
+// Database schema for the portfolio site.
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Singleton row (id is always 1) holding the editable profile / hero content.
+model Profile {
+  id          Int      @id @default(1)
+  name        String   @default("Your Name")
+  headline    String   @default("Cybersecurity & Code Enthusiast")
+  subheadline String   @default("I break things to understand them, then build them better.")
+  bio         String   @default("")
+  avatarUrl   String?
+  location    String?
+  email       String?
+  resumeUrl   String?
+  updatedAt   DateTime @updatedAt
+}
+
+// Blog posts, written + edited from the admin panel.
+model Blog {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  excerpt   String   @default("")
+  content   String   @default("")
+  coverUrl  String?
+  tags      String   @default("") // comma-separated tags
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Social / platform links (GitHub, TryHackMe, HackTheBox, Bugcrowd, ...).
+model SocialLink {
+  id        String   @id @default(cuid())
+  platform  String
+  label     String   @default("")
+  url       String
+  icon      String   @default("link") // icon key, see lib/icons
+  order     Int      @default(0)
+  visible   Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+// Achievements, certs, CTF placements, etc.
+model Achievement {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @default("")
+  date        String   @default("") // free-text, e.g. "2024" or "Mar 2025"
+  link        String?
+  icon        String   @default("trophy") // icon key, see lib/icons
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
