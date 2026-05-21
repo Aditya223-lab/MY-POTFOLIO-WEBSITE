@@ -2,7 +2,15 @@ import Link from "next/link";
 import { ChevronRight, ArrowDown } from "lucide-react";
 import type { Profile, SocialLink } from "@/app/generated/prisma/client";
 import { getIcon } from "@/lib/icons";
-import { CyberScanner } from "@/components/site/CyberScanner";
+
+function initials(name: string): string {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? "")
+    .join("");
+}
 
 export function Hero({
   profile,
@@ -73,9 +81,33 @@ export function Hero({
           ) : null}
         </div>
 
-        {/* ---- cyber threat scanner ---- */}
+        {/* ---- photo ---- */}
         <div className="flex justify-center md:justify-end">
-          <CyberScanner />
+          <div className="relative w-full max-w-[400px]">
+            <div className="glow-blob inset-6 bg-neon/25" />
+            <div className="glow-blob inset-16 bg-magenta/20" />
+            <div className="relative aspect-square overflow-hidden rounded-2xl border border-neon/30 bg-panel">
+              {profile.avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={profile.avatarUrl}
+                  alt={profile.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-neon/10 to-magenta/10">
+                  <span className="neon-text text-8xl font-extrabold">
+                    {initials(profile.name)}
+                  </span>
+                </div>
+              )}
+              {/* subtle corner accents */}
+              <span className="absolute left-3 top-3 h-6 w-6 border-l-2 border-t-2 border-neon" />
+              <span className="absolute right-3 top-3 h-6 w-6 border-r-2 border-t-2 border-neon" />
+              <span className="absolute bottom-3 left-3 h-6 w-6 border-b-2 border-l-2 border-neon" />
+              <span className="absolute bottom-3 right-3 h-6 w-6 border-b-2 border-r-2 border-neon" />
+            </div>
+          </div>
         </div>
       </div>
 
