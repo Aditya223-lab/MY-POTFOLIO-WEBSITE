@@ -31,7 +31,9 @@
       "Bash(curl -s -o /dev/null -w '%{http_code}' --max-time 30 -b portfolio_session=__TRACKED_VAR__ http://localhost:3000/x-2296190cac)",
       "Bash(curl -s -o /dev/null -w '%{http_code}' --max-time 30 -b portfolio_session=__TRACKED_VAR__ http://localhost:3000/x-2296190cac/socials)",
       "Bash(git init *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(node *)",
+      "Bash(git commit -q -m ' *)"
     ]
   }
 }
