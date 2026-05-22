@@ -10,6 +10,7 @@ import {
   type FormState,
 } from "@/app/admin/actions";
 import type { Blog } from "@/app/generated/prisma/client";
+import { parseTags } from "@/lib/utils";
 import { SubmitButton, Feedback, Field } from "./ui";
 import { ImageUpload } from "./ImageUpload";
 import { BlogContentEditor } from "./BlogContentEditor";
@@ -81,7 +82,14 @@ function parseMarkdown(filename: string, raw: string) {
   return { title, tags: fmTags, excerpt, content: body };
 }
 
-export function BlogForm({ blog }: { blog?: Blog }) {
+export function BlogForm({
+  blog,
+  allTags = [],
+}: {
+  blog?: Blog;
+  /** Tags already used across the site — shown as a clickable picker. */
+  allTags?: string[];
+}) {
   const isEdit = Boolean(blog);
   const [state, formAction] = useActionState(
     isEdit ? updateBlog : createBlog,
@@ -117,6 +125,18 @@ export function BlogForm({ blog }: { blog?: Blog }) {
       `Imported "${file.name}" — review the fields below, then publish.`,
     );
   }
+
+  /** Add or remove a tag from the comma-separated tags field. */
+  function toggleTag(tag: string) {
+    const current = parseTags(tags);
+    const has = current.some((t) => t.toLowerCase() === tag.toLowerCase());
+    const next = has
+      ? current.filter((t) => t.toLowerCase() !== tag.toLowerCase())
+      : [...current, tag];
+    setTags(next.join(", "));
+  }
+
+  const selectedTags = parseTags(tags).map((t) => t.toLowerCase());
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
@@ -181,15 +201,44 @@ export function BlogForm({ blog }: { blog?: Blog }) {
           />
         </Field>
 
-        <Field label="Tags" hint="Comma-separated, e.g. web security, ctf">
-          <input
-            name="tags"
-            className="field"
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
-            placeholder="web security, ctf"
-          />
-        </Field>
+        <div>
+          <Field
+            label="Tags"
+            hint="Comma-separated. Click a tag below to add it."
+          >
+            <input
+              name="tags"
+              className="field"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              placeholder="web security, ctf"
+            />
+          </Field>
+
+          {allTags.length > 0 ? (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <span className="mr-0.5 text-xs text-muted">On your site:</span>
+              {allTags.map((t) => {
+                const active = selectedTags.includes(t.toLowerCase());
+                return (
+                  <button
+                    type="button"
+                    key={t}
+                    onClick={() => toggleTag(t)}
+                    aria-pressed={active}
+                    className={`rounded-full border px-2.5 py-0.5 font-mono text-xs tracking-wide transition-colors ${
+                      active
+                        ? "border-neon/60 bg-neon/15 text-neon"
+                        : "border-line text-muted hover:border-neon/40 hover:text-ink"
+                    }`}
+                  >
+                    {t}
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
+        </div>
       </div>
 
       <div className="card p-5">

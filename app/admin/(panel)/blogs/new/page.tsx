@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { BlogForm } from "@/components/admin/BlogForm";
+import { getAllBlogTags } from "@/lib/data";
 import { ADMIN_PATH } from "@/lib/config";
 
-export default function NewBlogPage() {
+export default async function NewBlogPage() {
+  const allTags = await getAllBlogTags();
+
   return (
     <div className="flex flex-col gap-6">
       <header>
@@ -20,7 +23,7 @@ export default function NewBlogPage() {
         </p>
       </header>
 
-      <BlogForm />
+      <BlogForm allTags={allTags} />
     </div>
   );
 }

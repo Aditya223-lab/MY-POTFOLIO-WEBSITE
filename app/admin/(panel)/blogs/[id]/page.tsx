@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { getBlogById } from "@/lib/data";
+import { getBlogById, getAllBlogTags } from "@/lib/data";
 import { BlogForm } from "@/components/admin/BlogForm";
 import { ADMIN_PATH } from "@/lib/config";
 
@@ -8,7 +8,10 @@ type Props = { params: Promise<{ id: string }> };
 
 export default async function EditBlogPage({ params }: Props) {
   const { id } = await params;
-  const blog = await getBlogById(id);
+  const [blog, allTags] = await Promise.all([
+    getBlogById(id),
+    getAllBlogTags(),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -26,7 +29,7 @@ export default async function EditBlogPage({ params }: Props) {
       </header>
 
       {blog ? (
-        <BlogForm blog={blog} />
+        <BlogForm blog={blog} allTags={allTags} />
       ) : (
         <div className="card p-10 text-center text-muted">
           That post doesn’t exist — it may have been deleted.
