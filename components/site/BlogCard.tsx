@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Calendar, Clock, ArrowUpRight, FileText } from "lucide-react";
+import { Calendar, Clock, ArrowUpRight } from "lucide-react";
 import type { Blog } from "@/app/generated/prisma/client";
 import { formatDate, readingTime, parseTags } from "@/lib/utils";
 
@@ -62,17 +62,10 @@ export function BlogCard({ blog }: { blog: Blog }) {
             <Calendar className="h-3.5 w-3.5" />
             {formatDate(blog.createdAt)}
           </span>
-          {blog.pdfUrl ? (
-            <span className="flex items-center gap-1.5">
-              <FileText className="h-3.5 w-3.5" />
-              PDF
-            </span>
-          ) : (
-            <span className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              {readingTime(blog.content)} min read
-            </span>
-          )}
+          <span className="flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5" />
+            {readingTime(blog.content)} min read
+          </span>
         </div>
       </div>
     </Link>

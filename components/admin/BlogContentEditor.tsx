@@ -5,12 +5,16 @@ import { ImageIcon, Loader2 } from "lucide-react";
 import { uploadImage } from "@/app/admin/actions";
 
 /**
- * Markdown content textarea with an "Insert image" button that uploads a
- * file and drops the image markdown in at the cursor position — so you can
- * place screenshots between paragraphs while writing.
+ * Controlled Markdown content textarea with an "Insert image" button that
+ * uploads a file and drops the image markdown in at the cursor position.
  */
-export function BlogContentEditor({ defaultValue }: { defaultValue: string }) {
-  const [content, setContent] = useState(defaultValue);
+export function BlogContentEditor({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+}) {
   const [error, setError] = useState("");
   const [uploading, startUpload] = useTransition();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -30,9 +34,9 @@ export function BlogContentEditor({ defaultValue }: { defaultValue: string }) {
   function insertImage(url: string) {
     const ta = textareaRef.current;
     const snippet = `\n\n![describe the image](${url})\n\n`;
-    const start = ta ? ta.selectionStart : content.length;
-    const end = ta ? ta.selectionEnd : content.length;
-    setContent(content.slice(0, start) + snippet + content.slice(end));
+    const start = ta ? ta.selectionStart : value.length;
+    const end = ta ? ta.selectionEnd : value.length;
+    onChange(value.slice(0, start) + snippet + value.slice(end));
     pendingCursor.current = start + snippet.length;
   }
 
@@ -96,11 +100,11 @@ export function BlogContentEditor({ defaultValue }: { defaultValue: string }) {
       <textarea
         ref={textareaRef}
         name="content"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
         className="field min-h-[420px] w-full resize-y font-mono text-sm leading-relaxed"
         placeholder={
-          "## Introduction\n\nStart writing here…\n\nPut your cursor on a blank line and click “Insert image” to drop in a screenshot."
+          "## Introduction\n\nStart writing here…\n\nOr use “Import a Markdown note” above to bring in an Obsidian note."
         }
       />
     </div>
