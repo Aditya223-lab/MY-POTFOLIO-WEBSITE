@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import type { SocialLink } from "@/app/generated/prisma/client";
 import { getIcon } from "@/lib/icons";
+import { externalUrl } from "@/lib/utils";
 import { SectionHeading } from "./SectionHeading";
 import { Reveal } from "./Reveal";
 
@@ -25,7 +26,7 @@ export function SocialsGrid({ socials }: { socials: SocialLink[] }) {
               return (
                 <Reveal key={s.id} delay={(i % 3) * 0.07}>
                   <a
-                    href={s.url}
+                    href={externalUrl(s.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="card card-hover group flex h-full items-center gap-4 p-5"

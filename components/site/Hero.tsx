@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ChevronRight, ArrowDown, Download } from "lucide-react";
 import type { Profile, SocialLink } from "@/app/generated/prisma/client";
 import { getIcon } from "@/lib/icons";
+import { externalUrl } from "@/lib/utils";
 import { HeroSkills } from "./HeroSkills";
 
 export function Hero({
@@ -71,7 +72,7 @@ export function Hero({
                 return (
                   <a
                     key={s.id}
-                    href={s.url}
+                    href={externalUrl(s.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={s.platform}

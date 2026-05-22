@@ -40,3 +40,14 @@ export function parseTags(tags: string | null | undefined): string[] {
     .map((t) => t.trim())
     .filter(Boolean);
 }
+
+/**
+ * Make a user-entered link absolute so it opens as an external site rather
+ * than being mistaken for a route within this app (which 404s).
+ */
+export function externalUrl(url: string | null | undefined): string {
+  const u = (url ?? "").trim();
+  if (!u) return "#";
+  if (/^(https?:|mailto:|tel:)/i.test(u)) return u;
+  return `https://${u}`;
+}

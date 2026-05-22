@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Profile, SocialLink } from "@/app/generated/prisma/client";
 import { getIcon } from "@/lib/icons";
+import { externalUrl } from "@/lib/utils";
 
 export function Footer({
   profile,
@@ -32,7 +33,7 @@ export function Footer({
                 return (
                   <a
                     key={s.id}
-                    href={s.url}
+                    href={externalUrl(s.url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={s.platform}

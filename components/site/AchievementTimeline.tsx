@@ -1,6 +1,7 @@
 import { ExternalLink } from "lucide-react";
 import type { Achievement } from "@/app/generated/prisma/client";
 import { getIcon } from "@/lib/icons";
+import { externalUrl } from "@/lib/utils";
 import { SectionHeading } from "./SectionHeading";
 import { Reveal } from "./Reveal";
 
@@ -56,7 +57,7 @@ export function AchievementTimeline({
                     ) : null}
                     {a.link ? (
                       <a
-                        href={a.link}
+                        href={externalUrl(a.link)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mt-3 inline-flex items-center gap-1.5 font-mono text-xs text-neon hover:underline"

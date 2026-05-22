@@ -18,7 +18,7 @@ import {
   resetLoginAttempts,
 } from "@/lib/rate-limit";
 import { ADMIN_PATH } from "@/lib/config";
-import { slugify } from "@/lib/utils";
+import { slugify, externalUrl } from "@/lib/utils";
 
 export type FormState = { ok: boolean; message: string };
 export type UploadResult = { ok: boolean; url?: string; message?: string };
@@ -253,7 +253,7 @@ export async function createSocial(
   await prisma.socialLink.create({
     data: {
       platform,
-      url,
+      url: externalUrl(url),
       label: str(fd, "label"),
       icon: str(fd, "icon") || "link",
       order: num(fd, "order"),
@@ -276,7 +276,7 @@ export async function updateSocial(
     where: { id },
     data: {
       platform: str(fd, "platform"),
-      url: str(fd, "url"),
+      url: externalUrl(str(fd, "url")),
       label: str(fd, "label"),
       icon: str(fd, "icon") || "link",
       order: num(fd, "order"),
