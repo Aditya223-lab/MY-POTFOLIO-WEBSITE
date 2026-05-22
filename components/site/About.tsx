@@ -19,7 +19,7 @@ export function About({ profile }: { profile: Profile }) {
     .filter(Boolean);
 
   return (
-    <section id="about" className="relative px-5 py-24">
+    <section id="about" className="relative px-5 py-16">
       <div className="mx-auto max-w-6xl">
         <SectionHeading tag="whoami" title="About Me" />
 

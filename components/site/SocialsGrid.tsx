@@ -7,7 +7,7 @@ import { Reveal } from "./Reveal";
 
 export function SocialsGrid({ socials }: { socials: SocialLink[] }) {
   return (
-    <section id="connect" className="relative px-5 py-24">
+    <section id="connect" className="relative px-5 py-16">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           tag="connect"

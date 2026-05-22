@@ -31,7 +31,7 @@ export default async function HomePage() {
       <SocialsGrid socials={socials} />
 
       {/* latest writing */}
-      <section id="blog" className="relative bg-bg-soft px-5 py-24">
+      <section id="blog" className="relative bg-bg-soft px-5 py-16">
         <div className="mx-auto max-w-6xl">
           <SectionHeading
             tag="logs"
