@@ -316,6 +316,7 @@ body {
   border-radius: 5px;
 }
 .prose-cyber pre {
+  margin: 0;
   background: #070910;
   border: 1px solid var(--color-line);
   border-radius: 12px;
@@ -327,6 +328,40 @@ body {
   color: #cdd5e3;
   padding: 0;
   font-size: 0.85rem;
+}
+
+/* "Copy" button on code blocks (components/site/CodeBlock.tsx) */
+.prose-cyber .code-block {
+  position: relative;
+}
+.prose-cyber .code-copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--color-muted);
+  background: rgba(10, 12, 20, 0.9);
+  border: 1px solid var(--color-line);
+  border-radius: 7px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.prose-cyber .code-block:hover .code-copy,
+.prose-cyber .code-copy:focus-visible {
+  opacity: 1;
+}
+.prose-cyber .code-copy:hover,
+.prose-cyber .code-copy.is-copied {
+  color: var(--color-neon);
+  border-color: rgba(43, 246, 255, 0.5);
+  opacity: 1;
 }
 .prose-cyber img {
   border-radius: 12px;
