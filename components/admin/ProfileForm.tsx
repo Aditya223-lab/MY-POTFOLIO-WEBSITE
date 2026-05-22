@@ -6,6 +6,7 @@ import { updateProfile, type FormState } from "@/app/admin/actions";
 import type { Profile } from "@/app/generated/prisma/client";
 import { SubmitButton, Feedback, Field } from "./ui";
 import { ImageUpload } from "./ImageUpload";
+import { PdfUpload } from "./PdfUpload";
 
 const initialState: FormState = { ok: false, message: "" };
 
@@ -84,17 +85,11 @@ export function ProfileForm({ profile }: { profile: Profile }) {
           </Field>
         </div>
 
-        <Field
-          label="Résumé / CV link"
-          hint="Optional — a link to your downloadable résumé."
-        >
-          <input
-            name="resumeUrl"
-            className="field"
-            defaultValue={profile.resumeUrl ?? ""}
-            placeholder="https://…"
-          />
-        </Field>
+        <PdfUpload
+          name="resumeUrl"
+          defaultValue={profile.resumeUrl ?? ""}
+          label="CV / Résumé (PDF)"
+        />
       </div>
 
       <div className="flex items-center gap-3">

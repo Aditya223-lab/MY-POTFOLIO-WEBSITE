@@ -21,6 +21,10 @@ import { ADMIN_PATH } from "@/lib/config";
 import { slugify } from "@/lib/utils";
 
 export type FormState = { ok: boolean; message: string };
+export type UploadResult = { ok: boolean; url?: string; message?: string };
+
+// Keep uploads within the serverless request-body limit.
+const MAX_UPLOAD = 4 * 1024 * 1024; // 4 MB
 
 /* ---------- helpers ---------- */
 const str = (fd: FormData, k: string) => String(fd.get(k) ?? "").trim();
@@ -51,9 +55,22 @@ function refreshPublic() {
 async function clientKey(): Promise<string> {
   const h = await headers();
   const fwd = h.get("x-forwarded-for");
-  return (
-    fwd?.split(",")[0]?.trim() || h.get("x-real-ip") || "local"
-  );
+  return fwd?.split(",")[0]?.trim() || h.get("x-real-ip") || "local";
+}
+
+/** Store an uploaded file — Vercel Blob in production, local disk in dev. */
+async function storeUpload(file: File, ext: string): Promise<string> {
+  const name = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const { put } = await import("@vercel/blob");
+    const blob = await put(`uploads/${name}`, file, { access: "public" });
+    return blob.url;
+  }
+  const bytes = Buffer.from(await file.arrayBuffer());
+  const dir = path.join(process.cwd(), "public", "uploads");
+  await mkdir(dir, { recursive: true });
+  await writeFile(path.join(dir, name), bytes);
+  return `/uploads/${name}`;
 }
 
 /* ---------- auth ---------- */
@@ -63,7 +80,6 @@ export async function login(
 ): Promise<FormState> {
   const key = `login:${await clientKey()}`;
 
-  // Brute-force protection.
   const limit = checkLoginAttempts(key);
   if (limit.blocked) {
     return {
@@ -88,10 +104,8 @@ export async function logout(): Promise<void> {
   redirect(`${ADMIN_PATH}/login`);
 }
 
-/* ---------- image upload (Vercel Blob in prod, local disk in dev) ---------- */
-export async function uploadImage(
-  fd: FormData,
-): Promise<{ ok: boolean; url?: string; message?: string }> {
+/* ---------- uploads ---------- */
+export async function uploadImage(fd: FormData): Promise<UploadResult> {
   await requireAdmin();
   const file = fd.get("file");
   if (!(file instanceof File) || file.size === 0) {
@@ -100,35 +114,37 @@ export async function uploadImage(
   if (!file.type.startsWith("image/")) {
     return { ok: false, message: "Please choose an image file." };
   }
-  if (file.size > 10 * 1024 * 1024) {
-    return {
-      ok: false,
-      message: "Image is too large — please use one under 10 MB.",
-    };
+  if (file.size > MAX_UPLOAD) {
+    return { ok: false, message: "Image must be under 4 MB." };
   }
-
   const ext =
     (file.name.split(".").pop() || "png")
       .toLowerCase()
       .replace(/[^a-z0-9]/g, "") || "png";
-  const name = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-
   try {
-    // Production / Vercel: store in Blob cloud storage.
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const { put } = await import("@vercel/blob");
-      const blob = await put(`uploads/${name}`, file, { access: "public" });
-      return { ok: true, url: blob.url };
-    }
-
-    // Local development: store on disk under /public/uploads.
-    const bytes = Buffer.from(await file.arrayBuffer());
-    const dir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(dir, { recursive: true });
-    await writeFile(path.join(dir, name), bytes);
-    return { ok: true, url: `/uploads/${name}` };
+    return { ok: true, url: await storeUpload(file, ext) };
   } catch (err) {
     console.error("uploadImage failed:", err);
+    return { ok: false, message: "Upload failed — please try again." };
+  }
+}
+
+export async function uploadPdf(fd: FormData): Promise<UploadResult> {
+  await requireAdmin();
+  const file = fd.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, message: "No file selected." };
+  }
+  if (file.type !== "application/pdf") {
+    return { ok: false, message: "Please choose a PDF file." };
+  }
+  if (file.size > MAX_UPLOAD) {
+    return { ok: false, message: "PDF must be under 4 MB." };
+  }
+  try {
+    return { ok: true, url: await storeUpload(file, "pdf") };
+  } catch (err) {
+    console.error("uploadPdf failed:", err);
     return { ok: false, message: "Upload failed — please try again." };
   }
 }
@@ -176,6 +192,7 @@ export async function createBlog(
       excerpt: str(fd, "excerpt"),
       content: str(fd, "content"),
       coverUrl: str(fd, "coverUrl"),
+      pdfUrl: str(fd, "pdfUrl"),
       tags: str(fd, "tags"),
       published: bool(fd, "published"),
     },
@@ -204,6 +221,7 @@ export async function updateBlog(
       excerpt: str(fd, "excerpt"),
       content: str(fd, "content"),
       coverUrl: str(fd, "coverUrl"),
+      pdfUrl: str(fd, "pdfUrl"),
       tags: str(fd, "tags"),
       published: bool(fd, "published"),
     },

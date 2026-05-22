@@ -32,6 +32,7 @@ model Blog {
   excerpt   String   @default("")
   content   String   @default("")
   coverUrl  String?
+  pdfUrl    String? // optional attached PDF (e.g. exported notes)
   tags      String   @default("") // comma-separated tags
   published Boolean  @default(false)
   createdAt DateTime @default(now())

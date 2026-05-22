@@ -12,6 +12,7 @@ import {
 import type { Blog } from "@/app/generated/prisma/client";
 import { SubmitButton, Feedback, Field } from "./ui";
 import { ImageUpload } from "./ImageUpload";
+import { PdfUpload } from "./PdfUpload";
 import { BlogContentEditor } from "./BlogContentEditor";
 import { DeleteButton } from "./DeleteButton";
 
@@ -89,6 +90,19 @@ export function BlogForm({ blog }: { blog?: Blog }) {
         <p className="mt-2 text-xs text-muted">
           Supports Markdown — headings, bold, lists, links, and code blocks.
           Use “Insert image” to add screenshots between your paragraphs.
+        </p>
+      </div>
+
+      <div className="card p-5">
+        <PdfUpload
+          name="pdfUrl"
+          defaultValue={blog?.pdfUrl ?? ""}
+          label="PDF attachment (optional)"
+        />
+        <p className="mt-2 text-xs text-muted">
+          Attach a PDF — e.g. notes exported from Obsidian. It appears on the
+          published post, embedded and downloadable. If the PDF is the whole
+          post, you can leave the content above empty.
         </p>
       </div>
 

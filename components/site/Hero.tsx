@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, ArrowDown } from "lucide-react";
+import { ChevronRight, ArrowDown, Download } from "lucide-react";
 import type { Profile, SocialLink } from "@/app/generated/prisma/client";
 import { getIcon } from "@/lib/icons";
 import { HeroSkills } from "./HeroSkills";
@@ -49,6 +49,18 @@ export function Hero({
             <Link href="/blog" className="btn btn-ghost">
               Read the blog
             </Link>
+            {profile.resumeUrl ? (
+              <a
+                href={profile.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="btn btn-ghost"
+              >
+                <Download className="h-4 w-4" />
+                Download CV
+              </a>
+            ) : null}
           </div>
 
           {socials.length > 0 ? (

@@ -28,6 +28,11 @@ export function ImageUpload({
     const file = e.target.files?.[0];
     if (!file) return;
     setError("");
+    if (file.size > 4 * 1024 * 1024) {
+      setError("Image must be under 4 MB — try a smaller one.");
+      e.target.value = "";
+      return;
+    }
     const fd = new FormData();
     fd.append("file", file);
     startTransition(async () => {
@@ -98,7 +103,7 @@ export function ImageUpload({
       {error ? (
         <p className="mt-2 text-xs text-magenta">{error}</p>
       ) : (
-        <p className="mt-2 text-xs text-muted">PNG, JPG or WebP · up to 5 MB</p>
+        <p className="mt-2 text-xs text-muted">PNG, JPG or WebP · up to 4 MB</p>
       )}
     </div>
   );

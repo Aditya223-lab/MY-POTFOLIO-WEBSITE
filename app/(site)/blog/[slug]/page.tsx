@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Download, FileText } from "lucide-react";
 import { getBlogBySlug } from "@/lib/data";
 import { Markdown } from "@/components/site/Markdown";
 import { formatDate, readingTime, parseTags } from "@/lib/utils";
@@ -56,10 +56,18 @@ export default async function BlogDetailPage({ params }: Props) {
               <Calendar className="h-3.5 w-3.5" />
               {formatDate(blog.createdAt)}
             </span>
-            <span className="flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" />
-              {readingTime(blog.content)} min read
-            </span>
+            {blog.content.trim() ? (
+              <span className="flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" />
+                {readingTime(blog.content)} min read
+              </span>
+            ) : null}
+            {blog.pdfUrl ? (
+              <span className="flex items-center gap-1.5">
+                <FileText className="h-3.5 w-3.5" />
+                PDF document
+              </span>
+            ) : null}
           </div>
         </header>
 
@@ -74,9 +82,36 @@ export default async function BlogDetailPage({ params }: Props) {
           </div>
         ) : null}
 
-        <div className="mt-10">
-          <Markdown content={blog.content} />
-        </div>
+        {blog.content.trim() ? (
+          <div className="mt-10">
+            <Markdown content={blog.content} />
+          </div>
+        ) : null}
+
+        {blog.pdfUrl ? (
+          <div className="mt-10">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+              <h2 className="font-mono text-sm text-neon">
+                // attached document
+              </h2>
+              <a
+                href={blog.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="btn btn-ghost"
+              >
+                <Download className="h-4 w-4" />
+                Open / download PDF
+              </a>
+            </div>
+            <iframe
+              src={blog.pdfUrl}
+              title={blog.title}
+              className="h-[80vh] w-full rounded-xl border border-line bg-bg-soft"
+            />
+          </div>
+        ) : null}
 
         <div className="mt-14 border-t border-line pt-8 text-center">
           <Link href="/blog" className="btn btn-ghost">

@@ -40,6 +40,11 @@ export function BlogContentEditor({ defaultValue }: { defaultValue: string }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setError("");
+    if (file.size > 4 * 1024 * 1024) {
+      setError("Image must be under 4 MB.");
+      e.target.value = "";
+      return;
+    }
     const fd = new FormData();
     fd.append("file", file);
     startUpload(async () => {
